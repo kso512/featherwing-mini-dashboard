@@ -20,7 +20,7 @@ Hardware for this project consists of:
 
 Software for this project consists of:
 
-1. Python script on the PC running Linux, using RRDtool to generate a graph in BMP format and save it on the CircuitPython.  This script does not provide automation, as that can be applied with this cron entry: `* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`
+1. Python script on the PC running Linux, using RRDtool to generate a graph in BMP format and save it on the CircuitPython.  This script does not provide automation, as that can be applied with this cron entry: `* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`  Requires [RRDTool](https://pythonhosted.org/rrdtool/install.html)
 1. Python script on the Feather, displaying the graph
 
 ## License
