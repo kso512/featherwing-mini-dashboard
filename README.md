@@ -33,7 +33,7 @@ Software for this project consists of:
 
 After receiving all of the parts, assemble them so that the FeatherWing has male headers pointing down and the Feather has female headers pointing up.  Mate the two together, then plug it into your computer and follow the steps [here](https://learn.adafruit.com/welcome-to-circuitpython/installing-circuitpython) to install the latest version of CircuitPython.
 
-Drill the screw holes in the drawer to match the mounting holes on the FeatherWing, then cut a hole in the drawer that matches the buttons and screen but leaves enough material for the screws to grip to.  The drawer may also need a notch in the back to allow a USB cable to pass through to the motherboard.
+Drill screw holes in the front of the drawer to match the mounting holes on the FeatherWing, then cut a hole in the drawer that matches the buttons and screen but leaves enough material for the screws to grip to.  The drawer may also need a notch in the back to allow a USB cable to pass through to the motherboard.
 
 ## License
 
