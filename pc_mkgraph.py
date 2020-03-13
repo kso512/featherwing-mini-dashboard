@@ -1,33 +1,30 @@
 #!/usr/bin/env python3
-#pylint: disable=c-extension-no-member
 
 """
-Python script on the PC running Linux, using RRDtool to generate a
-graph in BMP format and save it on the CircuitPython.  This script
-does not provide automation, as that can be applied with this cron
-entry:   * * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1
-Requires RRDTool:    https://pythonhosted.org/rrdtool/install.html
+Python script on the PC running Linux, gathering local information
+and saving it as a text file on the CircuitPython. Requires Python 
+3.8.2 or higher.  This script does not provide automation, as that 
+can be applied with this cron entry:
+`* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`
 """
 
 ## LIBRARIES
-import rrdtool
+
 
 ## VARIABLES
 ### Toggle debugging if needed
-DEBUG = False
-### File to place information into
-BMPFILE = "hostinfo.bmp"
+DEBUG = True
+### File to read information from
+TXTFILE = "hostinfo.txt"
+### Set output line to aid in troubleshooting
+OUTPUT = "EMPTY"
 
 ## CODE
-rrdtool.create(
-    "test.rrd",
-    "--start", "now",
-    "--step", "300",
-    "RRA:AVERAGE:0.5:1:1200",
-    "DS:temp:GAUGE:600:-273:5000")
-
-# feed updates to the database
-rrdtool.update("test.rrd", "N:32")
+### Write output
+print("OUTPUT:", OUTPUT)
+FILEOUT = open(TXTFILE, "w")
+FILEOUT.write(OUTPUT)
+FILEOUT.close()
 
 ### Let the user know we're done
 if DEBUG:
