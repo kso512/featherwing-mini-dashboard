@@ -47,6 +47,11 @@ Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so i
 * [Errors and Exceptions](https://docs.python.org/3/tutorial/errors.html)
 * [proc - process information pseudo-filesystem](http://man7.org/linux/man-pages/man5/proc.5.html)
 * [ISO 8601 Date and time format](https://www.iso.org/iso-8601-date-and-time-format.html)
+* [Adafruit STM32F405 Feather Express](https://learn.adafruit.com/adafruit-stm32f405-feather-express/overview)
+* [supervisor - Supervisor settings](https://circuitpython.readthedocs.io/en/latest/shared-bindings/supervisor/__init__.html)
+* [board - Board specific pin names](https://circuitpython.readthedocs.io/en/latest/shared-bindings/board/__init__.html)
+* [digitalio — Basic digital pin support](https://circuitpython.readthedocs.io/en/latest/shared-bindings/digitalio/__init__.html)
+* [time — time and timing related functions](https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html)
 
 ## License
 
