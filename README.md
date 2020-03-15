@@ -30,14 +30,16 @@ Software for this project consists of:
 
 ### Hardware Assembly
 
-After receiving all of the parts, assemble them so that the FeatherWing has male headers pointing down and the Feather has female headers pointing up.  Mate the two together, then plug it into your computer and follow the steps [here](https://learn.adafruit.com/welcome-to-circuitpython/installing-circuitpython) to install the latest version of CircuitPython.  Connect the Feather to the PC running Linux with the USB-C cable, and note the path given to the mounted drive.
+After receiving all of the parts, assemble them so that the FeatherWing has male headers pointing down and the Feather has female headers pointing up.  Mate the two together, then plug it into to the PC running Linux with the USB-C cable and follow the steps [here](https://learn.adafruit.com/welcome-to-circuitpython/installing-circuitpython) to install the latest version of CircuitPython.  After connecting the Feather, note the path given to the mounted drive.
 
-Drill screw holes in the front of the drawer to match the mounting holes on the FeatherWing, then cut a hole in the drawer that matches the buttons and screen but leaves enough material for the screws to grip to.  The drawer may also need a notch in the back to allow a USB cable to pass through to the motherboard.
+Carefully drill holes in the front of the drawer to match the mounting holes on the FeatherWing, then cut a hole in the drawer that matches the buttons and screen but leaves enough material for the screws to grip to.  The drawer may also need a notch in the back to allow the USB-C cable to pass through to the motherboard.  After troubleshooting any issues and making sure everything's working well, mount the device in the drawer and mount the drawer into the PC running Linux.
 
 ### Software Installation and Configuration
 
 Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so it matches the path given to the mounted drive.  Enable automation with cron using an entry such as this:
 > `* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`
+
+Copy `stm32f405_code.py` to the mounted drive and reset using REPL or the reset button.
 
 ## References
 
@@ -52,6 +54,7 @@ Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so i
 * [board - Board specific pin names](https://circuitpython.readthedocs.io/en/latest/shared-bindings/board/__init__.html)
 * [digitalio — Basic digital pin support](https://circuitpython.readthedocs.io/en/latest/shared-bindings/digitalio/__init__.html)
 * [time — time and timing related functions](https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html)
+* [Introduction (to FeatherWing Library)](https://circuitpython.readthedocs.io/projects/featherwing/en/latest/index.html)
 
 ## License
 

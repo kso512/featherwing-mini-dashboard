@@ -10,6 +10,7 @@ References
 * https://circuitpython.readthedocs.io/en/latest/shared-bindings/board/__init__.html
 * https://circuitpython.readthedocs.io/en/latest/shared-bindings/digitalio/__init__.html
 * https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html
+* https://circuitpython.readthedocs.io/projects/featherwing/en/latest/index.html
 """
 
 ## LIBRARIES
@@ -17,6 +18,7 @@ import board
 import digitalio
 import supervisor
 import time
+from adafruit_featherwing import minitft_featherwing
 
 ## VARIABLES
 ### DEBUG: Toggle debugging if needed
@@ -25,13 +27,18 @@ DEBUG = True
 TXTFILE = "/hostinfo.txt"
 ### Pre-defined numbers; keep (LOOPDELAY * LOOPFACTOR) > 60
 LOOPCOUNT = 0
-LOOPDELAY = 10
-LOOPFACTOR = 7
+LOOPDELAY = 1
+LOOPFACTOR = 61
+### LASTVALUE; VALUE: Initialize variables to aid in
+###  troubleshooting
+LASTVALUE = VALUE = "EMPTY"
 
-## CONFIGURE
+## CONFIGURATION
 ### Onboard red LED attached to digital pin 13
 led = digitalio.DigitalInOut(board.D13)
 led.direction = digitalio.Direction.OUTPUT
+### Mini Color TFT with Joystick FeatherWing
+minitft = minitft_featherwing.MiniTFTFeatherWing()
 
 ## MAIN LOOP
 while True:
@@ -44,9 +51,49 @@ while True:
     LOOPMOD = LOOPCOUNT % LOOPFACTOR
     if DEBUG:
         print("LOOPCOUNT / LOOPMOD:", LOOPCOUNT, "/", LOOPMOD)
-    ### Indicate that we're processing data
+    ### Check for button presses; hold down for LOOPDELAY seconds!
+    buttons = minitft.buttons
+    if buttons.right:
+        print("Button RIGHT!")
+    if buttons.down:
+        print("Button DOWN!")
+    if buttons.left:
+        print("Button LEFT!")
+    if buttons.up:
+        print("Button UP!")
+    if buttons.select:
+        print("Button SELECT!")
+    if buttons.a:
+        print("Button A!")
+    if buttons.b:
+        print("Button B! Toggling DEBUG.")
+        if DEBUG:
+            DEBUG = False
+        else:
+            DEBUG = True        
+    ### Attempt to open the file
+    if DEBUG:
+        print("Trying to open file:", TXTFILE)
+    try:
+        #### Read the file
+        with open(TXTFILE, "r") as FP:
+            VALUE = FP.read()
+            ##### Close the file
+            FP.close()
+            if DEBUG:
+                print("Read and closed file:", TXTFILE)
+    ### Handle missing file error
+    except OSError as e:
+        print("FILE NOT FOUND!")
+        OVERRIDE = "RED"
+        #### Enable autoreload
+        supervisor.enable_autoreload()        
+    if DEBUG:
+        print("VALUE:", VALUE)
+
+    ### Indicate that we're done processing data
     led.value = False
     ### Pause until it's time to act again
     if DEBUG:
-        print("***** Processing complete, sleeping for", LOOPDELAY, "seconds... *****")
+        print("***** Sleeping for", LOOPDELAY, "second(s).")
     time.sleep(LOOPDELAY)
