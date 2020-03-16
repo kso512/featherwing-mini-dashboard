@@ -11,11 +11,13 @@ References
 * https://circuitpython.readthedocs.io/en/latest/shared-bindings/digitalio/__init__.html
 * https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html
 * https://circuitpython.readthedocs.io/projects/featherwing/en/latest/index.html
+* https://circuitpython.readthedocs.io/en/latest/shared-bindings/displayio/__init__.html
 """
 
 ## LIBRARIES
 import board
 import digitalio
+import displayio
 import supervisor
 import time
 from adafruit_featherwing import minitft_featherwing
@@ -25,13 +27,23 @@ from adafruit_featherwing import minitft_featherwing
 DEBUG = True
 ### TXTFILE: File to read information from
 TXTFILE = "/hostinfo.txt"
-### Pre-defined numbers; keep (LOOPDELAY * LOOPFACTOR) > 60
+### LOOPCOUNT: Number of times the main loops has been run
 LOOPCOUNT = 0
+### Keep (LOOPDELAY * LOOPFACTOR) > 60
+### LOOPDELAY: Number of seconds to wait before restarting the main loop
 LOOPDELAY = 1
+### LOOPFACTOR: Number to divide by and return the remainder of
 LOOPFACTOR = 61
-### LASTVALUE; VALUE: Initialize variables to aid in
+### PALETTE: A palette with 5 colors
+PALETTE = displayio.Palette(8)
+PALETTE[0] = 0x000000 #black
+PALETTE[1] = 0xff0000 #red
+PALETTE[2] = 0xffff00 #yellow
+PALETTE[3] = 0x00ff00 #green
+PALETTE[4] = 0x0000ff #blue
+### LASTVALUE; VALUE; LOOPMOD; OVERRIDE: Initialize variables to aid in
 ###  troubleshooting
-LASTVALUE = VALUE = "EMPTY"
+LASTVALUE = VALUE = LOOPMOD = OVERRIDE = "EMPTY"
 
 ## CONFIGURATION
 ### Onboard red LED attached to digital pin 13
@@ -39,6 +51,13 @@ led = digitalio.DigitalInOut(board.D13)
 led.direction = digitalio.Direction.OUTPUT
 ### Mini Color TFT with Joystick FeatherWing
 minitft = minitft_featherwing.MiniTFTFeatherWing()
+display = minitft.display
+### Create a bitmap with eight colors
+bitmap = displayio.Bitmap(160, 80, 8)
+### Fill space with black
+for x in range(0, 159):
+    for y in range(0, 79):
+        bitmap[x, y] = 0
 
 ## MAIN LOOP
 while True:
@@ -51,6 +70,14 @@ while True:
     LOOPMOD = LOOPCOUNT % LOOPFACTOR
     if DEBUG:
         print("LOOPCOUNT / LOOPMOD:", LOOPCOUNT, "/", LOOPMOD)
+    ### Create a TileGrid using the Bitmap and Palette
+    tile_grid = displayio.TileGrid(bitmap, pixel_shader=PALETTE)
+    ### Create a Group
+    group = displayio.Group()
+    ### Add the TileGrid to the Group
+    group.append(tile_grid)
+    ### Add the Group to the Display
+    display.show(group)
     ### Check for button presses; hold down for LOOPDELAY seconds!
     buttons = minitft.buttons
     if buttons.right:
@@ -80,16 +107,72 @@ while True:
             VALUE = FP.read()
             ##### Close the file
             FP.close()
+            OVERRIDE = "EMPTY"
             if DEBUG:
                 print("Read and closed file:", TXTFILE)
     ### Handle missing file error
     except OSError as e:
-        print("FILE NOT FOUND!")
+        if DEBUG:
+            print("FILE NOT FOUND!")
         OVERRIDE = "RED"
-        #### Enable autoreload
-        supervisor.enable_autoreload()        
     if DEBUG:
         print("VALUE:", VALUE)
+    ### After > 60 seconds, see if LASTVALUE is EMPTY; if so, set it to the
+    ###  new value
+    if LOOPMOD == 1:
+        if LASTVALUE == VALUE:
+            print("VALUE has not changed!")
+            if OVERRIDE == "EMPTY":
+                OVERRIDE = "YELLOW"
+            #### Enable autoreload
+            supervisor.enable_autoreload()
+        else:
+            if DEBUG:
+                print("Setting LASTVALUE to VALUE to detect lack of updates:", LASTVALUE, "/", VALUE)
+            LASTVALUE = VALUE
+            #### Split the string into a list and then tuple
+            VALUETUPLE = tuple(VALUE.split())
+            if DEBUG:
+                print("VALUETUPLE:", VALUETUPLE)
+            #### Break the tuple into individual numerical values
+            CPUCOUNT = float(VALUETUPLE[0])
+            LOAD1 = float(VALUETUPLE[1])
+            PROCESSINFO = VALUETUPLE[4].split('/')
+            PROCESSTUPLE = tuple(PROCESSINFO)
+            PROCESSCOUNT = int(PROCESSTUPLE[0])
+            if DEBUG:
+                print("LOAD1:", LOAD1, "/ PROCESSCOUNT:", PROCESSCOUNT)
+            #### Scale load value, which starts as a float that needs to be
+            ####  divided by CPUCOUNT, scaled between 0 and 80, multiplied by
+            ####  the process count, then rounded to integers.
+            LOADONE = int( ( ( LOAD1 / CPUCOUNT ) * 80 ) * PROCESSCOUNT )
+            #### Send integers lower than 79
+            if LOADONE > 79:
+                LOADONE = 79
+            if DEBUG:
+                print("LOADONE:", LOADONE)
+        #### Convert the load values into a block of color, taking
+        ####  overrrides into consideration.
+        if OVERRIDE == "RED":
+            print("CONDITION RED")
+            for x in range(0,159):
+                for y in range(0,79):
+                    bitmap[x, y] = 1
+        elif OVERRIDE == "YELLOW":
+            print("CONDITION YELLOW")
+            for x in range(0,159):
+                for y in range(0,79):
+                    bitmap[x, y] = 2
+        elif LOADONE > 39:
+            print("CONDITION GREEN")
+            for x in range(0,159):
+                for y in range(0,79):
+                    bitmap[x, y] = 3
+        else:
+            print("CONDITION BLUE")
+            for x in range(0,159):
+                for y in range(0,79):
+                    bitmap[x, y] = 4
 
     ### Indicate that we're done processing data
     led.value = False

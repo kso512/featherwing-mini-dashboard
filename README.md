@@ -24,7 +24,12 @@ Software for this project consists of:
     1. Requires Python 3.8.2 or higher.
     1. This script does not provide automation as that can be applied with cron; see below.
 
-1. Python script on the Feather, converting the text file data into a graph and displaying the graph.
+1. Python script on the Feather, converting the text file data into a graph and displaying the graph.  The graph will consist of colored vertical bars, each dependent upon the state at the time:
+    1. RED: Failure condition, such as a missing file
+    1. YELLOW: Warning condition, such as a stale file
+    1. GREEN: Normal operation, processing data
+    1. BLUE: Standing by, no load
+1. New bars will appear on the right and old bars drop off the left, causing a crawling effect.  For now, the whole display marks the current status.
 
 ## Installation & Configuration
 
@@ -39,7 +44,7 @@ Carefully drill holes in the front of the drawer to match the mounting holes on 
 Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so it matches the path given to the mounted drive.  Enable automation with cron using an entry such as this:
 > `* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`
 
-Copy `stm32f405_code.py` to the mounted drive and reset using REPL or the reset button.
+Copy `stm32f405_code.py` to the mounted drive as `code.py` and reset using REPL or the reset button.
 
 ## References
 
