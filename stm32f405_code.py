@@ -5,13 +5,13 @@ Python script on the Feather, converting the text file data into a graph and
 displaying the graph.
 
 References
-* https://learn.adafruit.com/adafruit-stm32f405-feather-express/overview
-* https://circuitpython.readthedocs.io/en/latest/shared-bindings/supervisor/__init__.html
-* https://circuitpython.readthedocs.io/en/latest/shared-bindings/board/__init__.html
-* https://circuitpython.readthedocs.io/en/latest/shared-bindings/digitalio/__init__.html
-* https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html
-* https://circuitpython.readthedocs.io/projects/featherwing/en/latest/index.html
-* https://circuitpython.readthedocs.io/en/latest/shared-bindings/displayio/__init__.html
+https://learn.adafruit.com/adafruit-stm32f405-feather-express/overview
+https://circuitpython.readthedocs.io/en/latest/shared-bindings/supervisor/__init__.html
+https://circuitpython.readthedocs.io/en/latest/shared-bindings/board/__init__.html
+https://circuitpython.readthedocs.io/en/latest/shared-bindings/digitalio/__init__.html
+https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html
+https://circuitpython.readthedocs.io/projects/featherwing/en/latest/index.html
+https://circuitpython.readthedocs.io/en/latest/shared-bindings/displayio/__init__.html
 """
 
 ## LIBRARIES
@@ -41,9 +41,11 @@ PALETTE[1] = 0xff0000 #red
 PALETTE[2] = 0xffff00 #yellow
 PALETTE[3] = 0x00ff00 #green
 PALETTE[4] = 0x0000ff #blue
-### LASTVALUE; VALUE; LOOPMOD; OVERRIDE: Initialize variables to aid in
+### COLOR: Integer color of bar
+COLOR = 0
+### LASTVALUE; VALUE; LOOPMOD; CONDITION: Initialize variables to aid in
 ###  troubleshooting
-LASTVALUE = VALUE = LOOPMOD = OVERRIDE = "EMPTY"
+LASTVALUE = VALUE = LOOPMOD = CONDITION = "EMPTY"
 
 ## CONFIGURATION
 ### Onboard red LED attached to digital pin 13
@@ -107,14 +109,14 @@ while True:
             VALUE = FP.read()
             ##### Close the file
             FP.close()
-            OVERRIDE = "EMPTY"
+            CONDITION = "EMPTY"
             if DEBUG:
                 print("Read and closed file:", TXTFILE)
     ### Handle missing file error
     except OSError as e:
         if DEBUG:
             print("FILE NOT FOUND!")
-        OVERRIDE = "RED"
+        CONDITION = "RED"
     if DEBUG:
         print("VALUE:", VALUE)
     ### After > 60 seconds, see if LASTVALUE is EMPTY; if so, set it to the
@@ -122,13 +124,13 @@ while True:
     if LOOPMOD == 1:
         if LASTVALUE == VALUE:
             print("VALUE has not changed!")
-            if OVERRIDE == "EMPTY":
-                OVERRIDE = "YELLOW"
+            if CONDITION == "EMPTY":
+                CONDITION = "YELLOW"
             #### Enable autoreload
             supervisor.enable_autoreload()
         else:
             if DEBUG:
-                print("Setting LASTVALUE to VALUE to detect lack of updates:", LASTVALUE, "/", VALUE)
+                print("LASTVALUE / VALUE:", LASTVALUE, "/", VALUE)
             LASTVALUE = VALUE
             #### Split the string into a list and then tuple
             VALUETUPLE = tuple(VALUE.split())
@@ -153,26 +155,21 @@ while True:
                 print("LOADONE:", LOADONE)
         #### Convert the load values into a block of color, taking
         ####  overrrides into consideration.
-        if OVERRIDE == "RED":
+        if CONDITION == "RED":
             print("CONDITION RED")
-            for x in range(0,159):
-                for y in range(0,79):
-                    bitmap[x, y] = 1
-        elif OVERRIDE == "YELLOW":
+            COLOR = 1
+        elif CONDITION == "YELLOW":
             print("CONDITION YELLOW")
-            for x in range(0,159):
-                for y in range(0,79):
-                    bitmap[x, y] = 2
+            COLOR = 2
         elif LOADONE > 39:
             print("CONDITION GREEN")
-            for x in range(0,159):
-                for y in range(0,79):
-                    bitmap[x, y] = 3
+            COLOR = 3
         else:
             print("CONDITION BLUE")
-            for x in range(0,159):
-                for y in range(0,79):
-                    bitmap[x, y] = 4
+            COLOR = 4
+        for x in range(0,159):
+            for y in range(0,79):
+                bitmap[x, y] = COLOR
 
     ### Indicate that we're done processing data
     led.value = False
