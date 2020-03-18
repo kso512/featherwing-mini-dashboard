@@ -41,8 +41,10 @@ PALETTE[1] = 0xff0000 #red
 PALETTE[2] = 0xffff00 #yellow
 PALETTE[3] = 0x00ff00 #green
 PALETTE[4] = 0x0000ff #blue
-### COLOR: Integer color of bar
-COLOR = 0
+### CURRENTCOLOR: Integer color value
+CURRENTCOLOR = 0
+### COLORLIST: List of integers containing past color values
+COLORLIST = [0] * 160
 ### LASTVALUE; VALUE; LOOPMOD; CONDITION: Initialize variables to aid in
 ###  troubleshooting
 LASTVALUE = VALUE = LOOPMOD = CONDITION = "EMPTY"
@@ -54,8 +56,8 @@ led.direction = digitalio.Direction.OUTPUT
 ### Mini Color TFT with Joystick FeatherWing
 minitft = minitft_featherwing.MiniTFTFeatherWing()
 display = minitft.display
-### Create a bitmap with eight colors
-bitmap = displayio.Bitmap(160, 80, 8)
+### Create a bitmap with five colors
+bitmap = displayio.Bitmap(160, 80, 5)
 ### Fill space with black
 for x in range(0, 159):
     for y in range(0, 79):
@@ -99,7 +101,7 @@ while True:
         if DEBUG:
             DEBUG = False
         else:
-            DEBUG = True        
+            DEBUG = True
     ### Attempt to open the file
     if DEBUG:
         print("Trying to open file:", TXTFILE)
@@ -153,24 +155,32 @@ while True:
                 LOADONE = 79
             if DEBUG:
                 print("LOADONE:", LOADONE)
-        #### Convert the load values into a block of color, taking
-        ####  overrrides into consideration.
+        #### Convert the load values into a color, taking earlier overrides 
+        ####  into consideration.
         if CONDITION == "RED":
             print("CONDITION RED")
-            COLOR = 1
+            CURRENTCOLOR = 1
         elif CONDITION == "YELLOW":
             print("CONDITION YELLOW")
-            COLOR = 2
+            CURRENTCOLOR = 2
         elif LOADONE > 39:
             print("CONDITION GREEN")
-            COLOR = 3
+            CURRENTCOLOR = 3
         else:
             print("CONDITION BLUE")
-            COLOR = 4
+            CURRENTCOLOR = 4
+        #### Tend the list of colors, removing the first and appending the 
+        ####  newest.
+        if DEBUG:
+            print("OLD COLORLIST:", COLORLIST)
+        COLORLIST.pop(0)
+        COLORLIST.append(CURRENTCOLOR)
+        if DEBUG:
+            print("NEW COLORLIST:", COLORLIST)
+        #### Loop through each column and paint it the color from the list
         for x in range(0,159):
             for y in range(0,79):
-                bitmap[x, y] = COLOR
-
+                bitmap[x, y] = COLORLIST[x+1]
     ### Indicate that we're done processing data
     led.value = False
     ### Pause until it's time to act again

@@ -24,12 +24,12 @@ Software for this project consists of:
     1. Requires Python 3.8.2 or higher.
     1. This script does not provide automation as that can be applied with cron; see below.
 
-1. Python script on the Feather, converting the text file data into a graph and displaying the graph.  The graph will consist of colored vertical bars, each dependent upon the state at the time:
+1. Python script on the Feather, converting the text file data into a bitmap and displaying it. The bitmap graph will consist of colored vertical bars, each dependent upon the state at the time:
     1. RED: Failure condition, such as a missing file
     1. YELLOW: Warning condition, such as a stale file
-    1. GREEN: Normal operation, processing data
-    1. BLUE: Standing by, no load
-1. New bars will appear on the right and old bars drop off the left, causing a crawling effect.  For now, the whole display marks the current status.
+    1. GREEN: Normal operation, such as high load while processing data
+    1. BLUE: Standing by, such as awaiting more work
+1. New bars will appear on the right and old bars drop off the left, causing a crawling effect.
 
 ## Installation & Configuration
 
