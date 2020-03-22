@@ -21,7 +21,7 @@ Hardware for this project consists of:
 Software for this project consists of:
 
 1. Python script on the PC running Linux, gathering local information and saving it as a text file on the CircuitPython.
-    1. Requires Python 3.8.2 or higher.
+    1. Requires Python 3.6.9+ or 3.8.2+.
     1. This script does not provide automation as that can be applied with cron; see below.
 
 1. Python script on the Feather, converting the text file data into a bitmap and displaying it. The bitmap graph will consist of colored vertical bars, each dependent upon the state at the time:
@@ -41,8 +41,8 @@ Carefully drill holes in the front of the drawer to match the mounting holes on 
 
 ### Software Installation and Configuration
 
-Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so it matches the path given to the mounted drive.  Enable automation with cron using an entry such as this:
-> `* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`
+Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so it matches the path given to the mounted drive.  Enable automation with cron using an entry for the version of Python you're running, such as this line for Python 3.8.2:
+> `* * * * * <repository path>/pc_mkgraph_382.py >/dev/null 2>&1`
 
 Copy `stm32f405_code.py` to the mounted drive as `code.py` and reset using REPL or the reset button.
 
@@ -68,7 +68,7 @@ No actions should be needed in normal operation.  Holding button B (bottom right
 ## Credits
 
 * `help-with-circuitpython` channel on Adafruit Discord
-* [Adafruit_clue_Magnetic_Graph]](https://github.com/AndrewTribble/adafruit_clue_Magnetic_Graph)
+* [Adafruit_clue_Magnetic_Graph](https://github.com/AndrewTribble/adafruit_clue_Magnetic_Graph)
 
 ## License
 

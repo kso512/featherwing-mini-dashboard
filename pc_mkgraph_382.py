@@ -2,8 +2,8 @@
 
 """
 Python script on the PC running Linux, gathering local information
-and saving it as a text file on the CircuitPython. Requires Python 
-3.8.2 or higher.  This script does not provide automation, as that 
+and saving it as a text file on the CircuitPython. Requires Python
+3.8.2 or higher.  This script does not provide automation, as that
 can be applied with this cron entry:
 `* * * * * <repository path>/pc_mkgraph.py >/dev/null 2>&1`
 
@@ -41,7 +41,7 @@ STDOUTCPU = OUTPUT = STDOUTLOAD = "EMPTY"
 ### Pull CPU count; output should look like single number; Ex: `16`
 try:
     STDOUTCPU = subprocess.run([CPUCOUNTCMD], shell=True,
-                        capture_output=True, text=True).stdout
+                               capture_output=True, text=True).stdout
     STDOUTCPU = STDOUTCPU.strip()
 except OSError as err:
     print("OS error: {0}".format(err))
@@ -55,7 +55,7 @@ if DEBUG:
 ###  number; Ex: `8.32 7.89 7.92 12/2452 2670160`
 try:
     STDOUTLOAD = subprocess.run([LOADAVGCMD], shell=True,
-                        capture_output=True, text=True).stdout
+                                capture_output=True, text=True).stdout
     STDOUTLOAD = STDOUTLOAD.strip()
 except OSError as err:
     print("OS error: {0}".format(err))
@@ -65,7 +65,7 @@ except:
 if DEBUG:
     print("STDOUTLOAD:", STDOUTLOAD)
 
-### Pull time and format to ISO 8601; output should look like a date and time 
+### Pull time and format to ISO 8601; output should look like a date and time
 ###  stamp with timezone; Ex: `2020-03-12T21:50:21-0600`
 LOCALTIME = time.strftime(TIMEFORMAT, time.localtime(time.time()))
 if DEBUG:
