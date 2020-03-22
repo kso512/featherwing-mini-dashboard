@@ -68,7 +68,7 @@ No actions should be needed in normal operation.  Holding button B (bottom right
 ## Credits
 
 * `help-with-circuitpython` channel on Adafruit Discord
-* [Adafruit_clue_Magnetic_Graph]](https://github.com/AndrewTribble/adafruit_clue_Magnetic_Graph)
+* [Adafruit_clue_Magnetic_Graph](https://github.com/AndrewTribble/adafruit_clue_Magnetic_Graph)
 
 ## License
 
