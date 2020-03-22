@@ -65,6 +65,11 @@ No actions should be needed in normal operation.  Holding button B (bottom right
 * [time — time and timing related functions](https://circuitpython.readthedocs.io/en/latest/shared-bindings/time/__init__.html)
 * [Introduction (to FeatherWing Library)](https://circuitpython.readthedocs.io/projects/featherwing/en/latest/index.html)
 
+## Credits
+
+* `help-with-circuitpython` channel on Adafruit Discord
+* [Adafruit_clue_Magnetic_Graph]](https://github.com/AndrewTribble/adafruit_clue_Magnetic_Graph)
+
 ## License
 
 [MIT](https://raw.githubusercontent.com/kso512/featherwing-mini-dashboard/master/LICENSE)
