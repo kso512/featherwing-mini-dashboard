@@ -46,6 +46,10 @@ Clone the repository from GitHub.  Adjust the variables, especially TXTFILE so i
 
 Copy `stm32f405_code.py` to the mounted drive as `code.py` and reset using REPL or the reset button.
 
+## Operation
+
+No actions should be needed in normal operation.  Holding button B (bottom right) for one second will toggle debug mode.  Debug mode adds more information to the serial output.  When the CIRCUITPY is connected it should appear as `/dev/ttyACM0` and can be monitoring with screen: `screen /dev/ttyACM0 115200`
+
 ## References
 
 * [time — Time access and conversions](https://docs.python.org/3/library/time.html)
